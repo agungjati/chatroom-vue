@@ -1,14 +1,15 @@
 <template>
   <div id="app">
-    
-    <h1>{{ msg }}</h1>
-   
+    <Login />
   </div>
 </template>
 
 <script>
+import Login from './Login'
+
 export default {
   name: 'app',
+  components: { Login },
   data () {
     return {
       msg: 'hello world'
