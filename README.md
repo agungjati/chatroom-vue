@@ -1,4 +1,4 @@
-# chatroom
+# frontend
 
 > A Vue.js project
 

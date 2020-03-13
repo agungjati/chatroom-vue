@@ -1,6 +1,7 @@
 <template>
   <div id="app">
-    <Login />
+     <router-link :to="{name: 'login'}">Login</router-link>
+     <router-view></router-view>
   </div>
 </template>
 
@@ -12,7 +13,7 @@ export default {
   components: { Login },
   data () {
     return {
-      msg: 'hello world'
+      msg: 'Welcome to Your Vue.js App'
     }
   }
 }
