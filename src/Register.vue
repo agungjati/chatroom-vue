@@ -1,9 +1,9 @@
 <template>
   <form class="form-signin">
     <div class="text-center mb-4">
-      <h1 class="h3 mb-3 font-weight-normal">Chat Room</h1>
+      <h1 class="h3 mb-3 font-weight-normal">register</h1>
       <p>
-        Reach your family, friends, and acquaintance easily with create your own chat room
+        
       </p>
     </div>
 
@@ -34,7 +34,7 @@
       <label>
         <input type="checkbox" value="remember-me" /> Remember me
       </label>
-      <router-link :to="{name: 'register'}">Register</router-link>
+      <a href="/register">Register</a>
     </div>
     <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
     <p class="mt-5 mb-3 text-muted text-center">© 1999-{{ yearNow }}</p>

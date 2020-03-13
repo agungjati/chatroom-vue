@@ -1,21 +1,18 @@
 <template>
-  <form class="form-signin">
-    <div class="text-center mb-4">
-      <h1 class="h3 mb-3 font-weight-normal">Chat Room</h1>
-      
-    </div>
-
-    
-    <br />
-    <div class="checkbox mb-3 d-flex justify-content-between">
-      <label>
-        <input type="checkbox" value="remember-me" /> Remember me
-      </label>
-      <a href="/register">Register</a>
-    </div>
-    <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
-    <p class="mt-5 mb-3 text-muted text-center">© 1999-{{ yearNow }}</p>
-  </form>
+  <div class="container d-flex">
+      <div class="d-flex flex-column" style="width: 30%">
+        <div>
+          image
+        </div>
+      <div>list chat</div>
+      </div>
+      <div class="d-flex flex-column" style="width: 70%">
+        <div>
+          image
+        </div>
+      <div> chat</div>
+      </div>
+  </div>
 </template>
 
 <script>
