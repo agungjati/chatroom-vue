@@ -35,9 +35,15 @@
 <script>
 import Chatroom from './components/Chatroom'
 import { context } from './services/contextState'
+import { router } from './router'
 
-console.log('context', context);
 export default {
+  created(){
+    if(context.username === "" || context.chatroomId === "")
+    {
+      router.push("login")
+    }
+  },
   name: "Home",
   components: {
     Chatroom

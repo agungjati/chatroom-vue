@@ -8,25 +8,26 @@
     </div>
 
     <div class="form-label-group">
-      <label for="inputEmail">Email address</label>
+      <label for="inputUsername">Username</label>
       <input
-        type="email"
-        id="inputEmail"
+        v-model="username"
+        type="text"
+        id="inputUsername"
         class="form-control"
-        placeholder="Email address"
+        placeholder="Enter Username"
         required
         autofocus
       />
     </div>
 
     <div class="form-label-group">
-       <label for="inputPassword">Password</label>
-       <select class="form-control">
-          <option>Education</option>
-          <option>Sport</option>
-          <option>Travelling</option>
-          <option>NodeJS Community</option>
+       <label for="inputPassword">Select a chatroom</label>
+       <select class="form-control" v-model="chatroom">
+          <option v-for="item in chatrooms" :key="item.name" :value="item.id"  >
+            {{item.name}}
+          </option>
        </select>
+       
     </div>
     <br />
    
@@ -38,19 +39,31 @@
 <script>
 import { router } from './router'
 import { context } from './services/contextState'
+import {  getChatrooms } from './services/UserService';
 
 export default {
   name: "Login",
-  data() {
-      return{
-        yearNow: (new Date).getFullYear()
-      }
+  created() {
+    getChatrooms()
+    .then(res => res.data)
+    .then(chatrooms => {
+      this.chatrooms = chatrooms
+    })
+  },
+  data(){
+    return {
+      yearNow: (new Date).getFullYear(),
+      chatrooms: [],
+      chatroom: "",
+      username: ""
+    }
   },
   methods: {
     onLogin (ev) {
       ev.preventDefault()
-      context.username = "sda"
-      context.chatRoom = "sda"
+
+      context.username = this.username;
+      context.chatroomId = this.chatroom;
       router.push("/")
     }
   }

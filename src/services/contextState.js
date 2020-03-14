@@ -1,4 +1,4 @@
 export const context = {
     username: "",
-    chatRoom: ""
+    chatroomId: ""
 }
