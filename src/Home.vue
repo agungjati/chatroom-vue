@@ -2,7 +2,7 @@
   <div class="container d-flex">
       <div class="d-flex flex-column" style="width: 30%">
         <div class="logo">
-          Chatroom
+          Chatroom {{ username }}
         </div>
       <div class="list-member">
         <div class="member">
@@ -23,20 +23,28 @@
       </div>
       <div class="d-flex flex-column" style="width: 70%">
         <div class="navbar">
-          image
+          <router-link class="btn btn-small btn-danger mr-2" :to="{name: 'login'}">Logout</router-link>
         </div>
         <div class="chat"> 
-          
+          <Chatroom />
         </div>
       </div>
   </div>
 </template>
 
 <script>
+import Chatroom from './components/Chatroom'
+import { context } from './services/contextState'
+
+console.log('context', context);
 export default {
   name: "Home",
+  components: {
+    Chatroom
+  },
   data() {
       return{
+        username: context.username,
         yearNow: (new Date).getFullYear()
       }
   }
@@ -46,6 +54,8 @@ export default {
 <style scoped>
 .logo {
   border-right: 3px solid #e06060;
+  display: flex;
+  align-items: center;
 }
 .navbar {
     display: flex;
@@ -55,8 +65,9 @@ export default {
 .logo, .navbar  {
     background: #f76c6c;
     color: #fff;
-    padding: 10px 5px;
+    padding: 0 5px;
     font-weight: bolder;
+    height: 51px;
 }
 
 .list-member {
@@ -65,7 +76,7 @@ export default {
 }
 
 .list-member, .chat{
-  height: calc(100vh - 24px);
+  height: calc(100vh - 44px);
     overflow: auto;
 }
 
@@ -105,5 +116,6 @@ export default {
 
 .chat {
   background: #fff2f8;
+  position: relative;
 }
 </style>

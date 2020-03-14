@@ -1,5 +1,5 @@
 <template>
-  <form class="form-signin">
+  <form class="form-signin" v-on:submit='onLogin'>
     <div class="text-center mb-4">
       <h1 class="h3 mb-3 font-weight-normal">Chat Room</h1>
       <p>
@@ -21,33 +21,38 @@
 
     <div class="form-label-group">
        <label for="inputPassword">Password</label>
-      <input
-        type="password"
-        id="inputPassword"
-        class="form-control"
-        placeholder="Password"
-        required
-      />
+       <select class="form-control">
+          <option>Education</option>
+          <option>Sport</option>
+          <option>Travelling</option>
+          <option>NodeJS Community</option>
+       </select>
     </div>
     <br />
-    <div class="checkbox mb-3 d-flex justify-content-between">
-      <label>
-        <input type="checkbox" value="remember-me" /> Remember me
-      </label>
-      <router-link :to="{name: 'register'}">Register</router-link>
-    </div>
-    <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+   
+    <button class="btn btn-lg btn-primary btn-block"  type="submit">Sign in</button>
     <p class="mt-5 mb-3 text-muted text-center">© 1999-{{ yearNow }}</p>
   </form>
 </template>
 
 <script>
+import { router } from './router'
+import { context } from './services/contextState'
+
 export default {
   name: "Login",
   data() {
       return{
         yearNow: (new Date).getFullYear()
       }
+  },
+  methods: {
+    onLogin (ev) {
+      ev.preventDefault()
+      context.username = "sda"
+      context.chatRoom = "sda"
+      router.push("/")
+    }
   }
 };
 </script>
