@@ -1,32 +1,30 @@
 <template>
-  <div class="container d-flex">
+  <div class="content container d-flex">
       <div class="d-flex flex-column" style="width: 30%">
         <div class="logo">
-          Chatroom {{ username }}
+          Chatroom &nbsp;<b>{{ chatroomName }}</b>
         </div>
       <div class="list-member">
-        <div class="member">
-           <span>A</span>
+        <div class="member" v-for="member in members" :key="member">
+           <span>{{ member.slice(0,1) }}</span>
            <div>
-              <span>Agung Jati</span>
-              <small>agungjati94@gmail.com</small>
+              <span>{{ member }}</span>
            </div>
         </div>
         <div class="member">
            <span>A</span>
            <div>
               <span>Agung Jati</span>
-              <small>agungjati94@gmail.com</small>
            </div>
         </div>
       </div>
       </div>
       <div class="d-flex flex-column" style="width: 70%">
         <div class="navbar">
-          <router-link class="btn btn-small btn-danger mr-2" :to="{name: 'login'}">Logout</router-link>
+          <router-link class="btn btn-small btn-primary mr-2" :to="{name: 'login'}">Logout</router-link>
         </div>
         <div class="chat"> 
-          <Chatroom />
+          <Chatroom :chats="chats" />
         </div>
       </div>
   </div>
@@ -35,23 +33,40 @@
 <script>
 import Chatroom from './components/Chatroom'
 import { context } from './services/contextState'
+import { getChatroom } from './services/ChatService'
 import { router } from './router'
 
 export default {
   created(){
-    if(context.username === "" || context.chatroomId === "")
+    let contextLocal =  localStorage.getItem("context");
+    if(!contextLocal)
     {
       router.push("login")
+    }else{
+      const { username, chatroomId, chatroomName } = JSON.parse(contextLocal)
+      context.username = username
+      context.chatroomId = chatroomId
+      context.chatroomName = chatroomName
+
+      getChatroom(context.chatroomId)
+      .then(x => x.data)
+      .then(chatroom => {
+        this.members = chatroom.members
+        this.chats = chatroom.chats
+    })
     }
+
+
   },
   name: "Home",
   components: {
-    Chatroom
+    Chatroom,
   },
   data() {
       return{
-        username: context.username,
-        yearNow: (new Date).getFullYear()
+        chatroomName: context.chatroomName,
+        members: [],
+        chats: []
       }
   }
 };
@@ -59,9 +74,10 @@ export default {
 
 <style scoped>
 .logo {
-  border-right: 3px solid #e06060;
+  border-right: 3px solid #3c6c90;
   display: flex;
   align-items: center;
+  justify-content: center;
 }
 .navbar {
     display: flex;
@@ -69,7 +85,7 @@ export default {
     justify-content: flex-end;text-align: left;
 }
 .logo, .navbar  {
-    background: #f76c6c;
+    background:rgb(86, 130, 163);
     color: #fff;
     padding: 0 5px;
     font-weight: bolder;
@@ -77,18 +93,19 @@ export default {
 }
 
 .list-member {
-  background: #fff2f8;
+  background: #fff;
   padding: 10px 0;
+  border-right: 2px solid #eaeaea;
 }
 
 .list-member, .chat{
-  height: calc(100vh - 44px);
-    overflow: auto;
+  height: calc(100vh - 68px);
+  overflow: auto;
 }
 
 .member >span {
+  background: #b2a7c7;
     display: flex;
-    background: #b2a7c7;
     color: #fff;
     height: 35px;
     width: 35px;
@@ -111,7 +128,6 @@ export default {
     flex-direction: column;
     padding: 5px;
     flex: 1;
-    border-bottom: 1px solid #999;
         
 }
 
@@ -121,7 +137,12 @@ export default {
 }
 
 .chat {
-  background: #fff2f8;
+  background: #fff;
   position: relative;
+}
+
+.content {
+  box-shadow: 0 2px 2px #ccc;
+  padding: 0;
 }
 </style>

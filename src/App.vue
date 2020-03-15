@@ -18,4 +18,8 @@ export default {
 
 <style>
 @import './assets/bootstrap.min.css';
+#app {
+  background: #eaeaea;
+  height: 100vh;
+}
 </style>
