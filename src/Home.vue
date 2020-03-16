@@ -1,27 +1,26 @@
 <template>
   <div class="content container d-flex">
-      <div class="d-flex flex-column" style="width: 30%">
+      <div class="flex-column" 
+      :style=" isDisplayMenu  && currentWidth <= 768 ?  'display: none;' :'width: 30%; display: flex;' 
+                                                       " 
+      id="side-bar">
+
         <div class="logo">
-          Chatroom &nbsp;<b>{{ chatroomName }}</b>
+          <span>Chatroom&nbsp;</span> <b>{{ chatroomName }}</b>
         </div>
       <div class="list-member">
         <div class="member" v-for="member in members" :key="member">
-           <span>{{ member.slice(0,1) }}</span>
+             <span>{{ member.slice(0,1) }}</span>
            <div>
               <span>{{ member }}</span>
            </div>
         </div>
-        <div class="member">
-           <span>A</span>
-           <div>
-              <span>Agung Jati</span>
-           </div>
-        </div>
       </div>
       </div>
-      <div class="d-flex flex-column" style="width: 70%">
+      <div class="d-flex flex-column" style="width: 70%" id="content">
         <div class="navbar">
-          <router-link class="btn btn-small btn-primary mr-2" :to="{name: 'login'}">Logout</router-link>
+          <a  href="#" class="btn btn-sm text-white mr-2 d-none" @click="onDisplayMember()" id="menu" ><em class="fa fa-bars"></em></a>
+          <a href="#" class="btn btn-sm btn-primary mr-2" @click="onLogout()" >Logout</a>
         </div>
         <div class="chat"> 
           <Chatroom :chats="chats" />
@@ -47,6 +46,7 @@ export default {
       context.username = username
       context.chatroomId = chatroomId
       context.chatroomName = chatroomName
+      this.chatroomName = chatroomName
 
       getChatroom(context.chatroomId)
       .then(x => x.data)
@@ -66,13 +66,28 @@ export default {
       return{
         chatroomName: context.chatroomName,
         members: [],
-        chats: []
+        chats: [],
+        isDisplayMenu: true,
+        currentWidth: window.innerWidth
       }
+  },
+  methods:{
+    onLogout(){
+      localStorage.clear()
+       router.push("login")
+    },
+    onDisplayMember() {
+      this.isDisplayMenu = !this.isDisplayMenu
+    }
   }
 };
 </script>
 
 <style scoped>
+#side-bar {
+  display: flex;
+}
+
 .logo {
   border-right: 3px solid #3c6c90;
   display: flex;
@@ -145,4 +160,27 @@ export default {
   box-shadow: 0 2px 2px #ccc;
   padding: 0;
 }
+
+@media (max-width: 768px)
+{
+  .logo {
+    flex-direction: column;
+  }
+
+  #side-bar {
+    display: none;
+  }
+
+  #content {
+    width: 100% !important;
+  }
+
+.navbar {
+  justify-content: space-between;
+}
+  #menu {
+    display: inline !important;
+  }
+}
+
 </style>

@@ -1,29 +1,19 @@
 <template>
   <div>
        <div class="list-message">
-         <div v-for="chat in chats" 
-          :key="chat.username" 
-          :class="username ==">
+         <div v-for="(chat, i) in chats" 
+          :key="i" 
+          :class="username  === chat.username ? 'd-flex justify-content-end' : ''"
+          >
           <div class="message mb-2">
             <div class="message-header">
                 <span>{{ chat.username }}</span>
-                <small>17:00</small>
+                <small>{{chat.createdAt}}</small>
             </div>
-            <div>hai gus</div>
+            <div>{{ chat.message }}</div>
           </div>
         </div>
 
-        <!-- <div class="d-flex justify-content-end">
-        <div class="message">
-           <div class="message-header">
-              <span>Agung Jati</span>
-              <small>17:00</small>
-           </div>
-          <div>
-              hai gus
-          </div>
-        </div>
-        </div > -->
     </div>
      <form class="input-message" @submit="onInsertMessage">
        <div >
@@ -33,8 +23,8 @@
         v-model="message">
       </textarea>
       &nbsp;
-      <input type="submit" class="btn btn-small btn-primary" value="SEND" />
       </div>
+      <input type="submit" class="btn btn-small btn-primary" value="SEND" />
     </form>
     </div>
 </template>
@@ -47,11 +37,14 @@ import io from 'socket.io-client'
 export default {
   name: 'Chatroom',
   props: ['chats'],
-   created(){
+  mounted(){
     this.startSocket()
+    this.scrollToEnd()
   },
   data () {
     return {
+      socket: io(URL_SOCKET),
+      socketClient: {},
       message: "",
       username: context.username
     }
@@ -59,23 +52,41 @@ export default {
   methods: {
     onInsertMessage(ev){
       ev.preventDefault()
-      console.log('ch', this.chats)
-      // addMessage(context.chatroomId, context.username, this.message)
-      // .then(() => {
-      //   this.message = ""
-      // });
+      this.socket.emit('save', {
+        id: context.chatroomId, 
+        username: context.username, 
+        message: this.message
+      })
+      this.message = ""
     },
     startSocket(){
-      const socket = io(URL_SOCKET);
-      socket.on('connection', (client) => {
-        console.log('connection successfuly') 
+      this.socket.on('connect',  (client) => {
+        console.log('connection successfuly', client) 
+        this.socket.emit('subscribe', { id: context.chatroomId })
       })
 
-      socket.on('message_saved', (data) => {
-          console.log('received client', data)
+      this.socket.on('disconnect',  (client) => {
+        console.log('disconnection', client) 
+        this.socket.emit('unsubscribe', { id: context.chatroomId })
+      })
+
+      this.socket.on('message_saved', (data) => {
+        this.scrollToEnd()
+          this.chats.push(data)
+      });
+
+      this.socket.on('message_not_saved', (data) => {
+        alert(data)
+        console.error(data)
       });
       
-      socket.emit('save', { 'name': 'hai' })
+    },
+    scrollToEnd() {
+      setTimeout(() => {
+        const container = this.$el.querySelector(".list-message");
+        container.scrollTop = container.scrollHeight+1000;
+      }, 500)    	
+      
     }
   },
   
@@ -132,6 +143,8 @@ export default {
     margin: 10px;
     display: flex;
     flex-direction: column;
+    overflow-y: auto;
+    height: calc(100vh - 173px);
 }
 .message-header {
 
